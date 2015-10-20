@@ -1,0 +1,25 @@
+{% include 'navigation.html' %}
+<!--This will render a table of a query response -->
+
+
+
+
+
+<table >
+  <tr>
+    <td>Title</td>
+    <td>Message Body</td>		
+    <td>Date Message Saved</td>
+  </tr>
+  {% for message in msg %}
+	  <tr>
+	    <td>{{ message.title }}</td>
+	    <td>{{ message.message }}</td>		
+	    <td>{{ message.input_time }}</td>
+	  </tr>
+	 {% endfor %} 
+</table>
+
+
+
+

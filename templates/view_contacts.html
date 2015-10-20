@@ -1,0 +1,33 @@
+
+<html>
+
+<style>
+	td {border-style: solid;}
+	table {width: 75%;}
+</style>
+
+<body>
+{% include 'navigation.html' %}
+
+
+
+<table>
+  <tr>
+    <td>First Name</td>
+    <td>Last Name</td>		
+    <td>Email</td>
+    <td>Phone Number</td>
+  </tr>
+  {% for user in contacts %}
+	  <tr>
+	    <td>{{ user.first_name }}</td>
+	    <td>{{ user.last_name }}</td>		
+	    <td>{{ user.email }}</td>
+	    <td>{{ user.phone }}</td>
+	  </tr>
+	 {% endfor %} 
+</table>
+
+
+</body>
+</html>
