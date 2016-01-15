@@ -1,0 +1,16 @@
+{% include 'navigation.html' %}
+
+<table>
+	<tr>
+		{% for header in headers %}
+		<td> {{ header }} </td>
+		{% endfor %}
+	</tr>
+	{% for result in results %}
+	<tr>
+		{% for header in headers %}
+		<td>{{ result.{{ header }} }}</td>
+		{% endfor %}
+	</tr>
+	{% endfor %}
+</table>

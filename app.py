@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, request, url_for, render_template
 from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime
 from twilio.rest import TwilioRestClient 
@@ -65,6 +65,23 @@ class TextMessage(db.Model):
 		return "<Message-Title'%s'>" % self.title
 
 
+#new class/ object for a record - use this to record all messages that get sent
+class MessageSentRecord(db.Model):
+	__tablename__ = "sentmessages"
+	id = db.Column(db.Integer, primary_key=True)
+	#the unique ID of the TextMessage object that was sent
+	message_id = db.Column(db.Integer, primary_key=False, unique = False)
+	sent_date = db.Column(db.DateTime, server_default=db.func.now())
+	#ID of the text recipient, either individual or group?
+	contact_id = db.Column(db.Integer)
+
+	def __init__(self, message_id, contact_id):
+		self.message_id = message_id
+		self.contact_id = contact_id
+
+	def __repr__(self):
+		return '<Text Record %s>' % self.message_id
+
 #################################
 #################################
 ######## CONTROLLERS?? ##########
@@ -92,6 +109,10 @@ def viewContacts():
 @app.route('/')
 def index():
 	return render_template('index.html')
+
+@app.route('/createGroup', methods=['GET'])
+def createGroup():
+	return 'yeah so create a contact group'
 
 @app.route('/viewMessages', methods=['GET'])
 def viewMessages():
@@ -137,6 +158,12 @@ def send_text(phone, message):
 		body=message,  
 	)
 
+def record_text_sent(message_id, contact_id):
+	#create new record/object to record the transaction. may need to update to include a list of IDs or maybe a contact_ID could be a group
+	record = MessageSentRecord(message_id, contact_id)
+	db.session.add(record)
+	db.session.commit()
+
 @app.route('/sendMessage', methods=['GET'])
 def sendMessage():
 	#now want to select message from list of saved messages
@@ -159,14 +186,25 @@ def messageSent():
 	#send the shit to the phone
 		text_body = TextMessage.query.get(int(message_id)).message
 		contact_phone = User.query.get(int(contact_id)).phone
+		
 		send_text(contact_phone,text_body)
 		#grab the parameters from the form
-	
+		
+		#now make a record of this action
+		record_text_sent(message_id, contact_id)
+
 
 		#here need to send the message and who it was sent to to the message confirmation screen
 		html = "message id: " + str(message_id) + "  contact_id: " + str(contact_id) + "<br>" 
 		#+ render_template('messageSent.html')
 	return  render_template('messageSent.html', text = html)
+
+@app.route('/viewHistory',methods=['GET'])
+def viewHistory():
+	history = MessageSentRecord.query.limit(25).all()
+	headers = ['message_id','sent_date','contact_id']
+	
+	return render_template('viewHistory.html',results = history, headers = headers, len = len(headers))
 
 
 # Save e-mail to database and send to success page

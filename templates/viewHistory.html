@@ -1,0 +1,18 @@
+{% include 'navigation.html' %}
+
+<table>
+	<tr>
+		<td>message_id</td>
+		<td>sent_date</td>
+		<td>contact_id</td>
+		<td>record_id</td>
+	</tr>
+	{% for result in results %}
+	<tr>
+		<td>{{ result.message_id }}</td>
+		<td>{{ result.sent_date }}</td>
+		<td>{{ result.contact_id }}</td>
+		<td>{{ result.id }}</td>
+	</tr>
+	{% endfor %}
+</table>

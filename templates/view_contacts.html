@@ -17,6 +17,7 @@
     <td>Last Name</td>		
     <td>Email</td>
     <td>Phone Number</td>
+    <td>Contact ID</td>
   </tr>
   {% for user in contacts %}
 	  <tr>
@@ -24,6 +25,7 @@
 	    <td>{{ user.last_name }}</td>		
 	    <td>{{ user.email }}</td>
 	    <td>{{ user.phone }}</td>
+	    <td>{{ user.id }}</td>
 	  </tr>
 	 {% endfor %} 
 </table>

@@ -7,12 +7,14 @@
 
 <table >
   <tr>
+  	<td>ID</td>
     <td>Title</td>
     <td>Message Body</td>		
     <td>Date Message Saved</td>
   </tr>
   {% for message in msg %}
 	  <tr>
+	  	<td>{{ message.id }}</td>
 	    <td>{{ message.title }}</td>
 	    <td>{{ message.message }}</td>		
 	    <td>{{ message.input_time }}</td>
